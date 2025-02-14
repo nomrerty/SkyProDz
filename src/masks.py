@@ -8,6 +8,7 @@ def mask_card(card_number: str) -> str:
     return "Некорректный номер карты"
 
 
+
 def mask_account(account_number: str) -> str:
     """
     Функция принимает на вход номер счета и возвращает его маску.
