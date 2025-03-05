@@ -6,8 +6,8 @@ from src.masks import mask_account, mask_card
 
 
 def test_mask_card() -> None:
-    assert mask_card("1234567890123456") == "1234 56** **** 3456"
-    assert mask_card("12345") == "Некорректный номер карты"
+    assert mask_card("2135421354213546") == "2135 46** **** 3546"
+    assert mask_card("21354") == "Некорректный номер карты"
 
 
 """
