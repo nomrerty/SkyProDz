@@ -32,9 +32,6 @@ testpaths = [
     "tests",
     "integration",
 ]
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 disallow_untyped_defs = true

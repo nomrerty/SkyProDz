@@ -1,6 +1,6 @@
 import pytest
 
-from src.widget import convert_date_format, mask_number
+from src.widget import mask_number, convert_date_format
 
 """
 # Проверка функции mask_number()
