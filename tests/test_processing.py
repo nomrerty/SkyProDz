@@ -1,8 +1,5 @@
 import pytest
 
-from datetime import datetime
-
-from typing import List
 
 from src.processing import sort_by_date, filter_by_state
 
@@ -23,10 +20,10 @@ def sample_input():
 # Тестирование функции sort_by_date
 def test_sort_by_date_descending(sample_input):
     expected_output = [
-        {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-        {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-        {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+        {"date": "2019-07-03T18:35:29.512364", "id": 41428829, "state": "EXECUTED"},
+        {"date": "2018-10-14T08:21:33.419441", "id": 615064591, "state": "CANCELED"},
+        {"date": "2018-09-12T21:27:25.241689", "id": 594226727, "state": "CANCELED"},
+        {"date": "2018-06-30T02:08:58.425572", "id": 939719570, "state": "EXECUTED"},
     ]
 
     result = sort_by_date(sample_input, "descending")
@@ -35,10 +32,10 @@ def test_sort_by_date_descending(sample_input):
 
 def test_sort_by_date_ascending(sample_input):
     expected_output = [
-        {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-        {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-        {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+        {"date": "2018-06-30T02:08:58.425572", "id": 939719570, "state": "EXECUTED"},
+        {"date": "2018-09-12T21:27:25.241689", "id": 594226727, "state": "CANCELED"},
+        {"date": "2018-10-14T08:21:33.419441", "id": 615064591, "state": "CANCELED"},
+        {"date": "2019-07-03T18:35:29.512364", "id": 41428829, "state": "EXECUTED"},
     ]
 
     result = sort_by_date(sample_input, "ascending")
@@ -49,7 +46,7 @@ def test_sort_by_date_ascending(sample_input):
 def test_filter_by_state_executed(sample_input):
     expected_output = [
         {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"}
+        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
     ]
 
     result = filter_by_state(sample_input, "EXECUTED")
@@ -59,7 +56,7 @@ def test_filter_by_state_executed(sample_input):
 def test_filter_by_state_canceled(sample_input):
     expected_output = [
         {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-        {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"}
+        {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
     ]
 
     result = filter_by_state(sample_input, "CANCELED")
