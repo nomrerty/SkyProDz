@@ -1,6 +1,5 @@
 import sys
 
-
 from src.masks import mask_account, mask_card
 
 sys.path.append("/")
