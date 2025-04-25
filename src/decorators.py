@@ -1,29 +1,40 @@
-def log(filename=""):
-    """Этот декоратор автоматически логирует начало и конец выполнения функции,
-     а также ее результаты или возникшие ошибки.
-    Декоратор принимает необязательный аргумент "filename",
-    который определяет, куда будут записываться логи (в файл или в консоль)."""
+def log(filename=None):
+    """
+    Функция записывает информацию, включая переданные аргументы и результаты.
+    Если указано имя файла, записывает это в файл если не указан, то выводится в консоль.
+    """
 
     def decorator(func):
         def wrapper(*args, **kwargs):
+            log_msg = f"Function '{func.__name__}' started with args: {args}, kwargs: {kwargs}\n"
+
             try:
                 result = func(*args, **kwargs)
-            except Exception as error:
-                if filename == "":
-                    return f"{func.__name__} error: {type(error).__name__}. Inputs: {args}, {kwargs}"
+                log_msg += f"Function '{func.__name__}' finished successfully with: {result}\n"
+                if filename:
+                    with open(filename, 'a') as f:
+                        f.write(log_msg)
                 else:
-                    file = open(filename, "w")
-                    file.write(f"{func.__name__} error: {type(error).__name__}. Inputs: {args}, {kwargs}")
-                    file.close()
-            else:
-                if filename == "":
-                    return f"{func.__name__} {result}"
+                    print(log_msg)
+                return result
+
+            except Exception as e:
+                log_msg += f"Function '{func.__name__}' raised an exception: {type(e).__name__} with args: {args}, kwargs: {kwargs}\n"
+                if filename:
+                    with open(filename, 'a') as f:
+                        f.write(log_msg)
                 else:
-                    file = open(filename, "w")
-                    file.write(f"{func.__name__} {result}")
-                    file.close()
-            return ""
+                    print(log_msg)
+                raise
 
         return wrapper
 
     return decorator
+
+
+@log()
+def add(a, b):
+    return a + b
+
+
+add(2, 3)

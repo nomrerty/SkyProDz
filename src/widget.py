@@ -1,26 +1,48 @@
-from datetime import datetime
+from typing import Union
 
-from src.masks import mask_account, mask_card
+from src.masks import get_mask_account, get_mask_card_number
 
 
-def mask_number(input_str: str) -> str:
-    """
-    Принимает на вход строку с информацией — тип карты/счета и номер карты/счета.
-    Возвращает исходную строку с замаскированным номером карты/счета.
-    """
-    split_str = input_str.split()
-    if split_str[0] in ["Visa", "MasterCard", "Maestro"]:
-        return " ".join([*filter(str.isalpha, split_str), mask_card("".join([i for i in split_str if i.isdigit()]))])
-    elif split_str[0] == "Счет":
-        return "Счет " + mask_account(split_str[1])
+def mask_account_card(card_data: Union[str]) -> str:
+    """Обрабатывает информацию как о картах, так и о счетах
+    Возвращает строку с замаскированным номером"""
+    card_data = card_data.strip()
+
+    if len(card_data) < 16:
+        return "Ошибка, проверьте введенные данные"
+
+    count = 0
+    for i in card_data:
+        if i.isdigit():
+            first_digit = count
+        else:
+            count += 1
+
+    if "Счет" in card_data:
+        mask_card_data = get_mask_account(card_data[first_digit::])
+        if mask_card_data[0].isalpha():
+            return "Ошибка, проверьте введенные данные"
+        else:
+            mask_card_data = card_data[:first_digit] + mask_card_data
     else:
-        return input_str
+        mask_card_data = get_mask_card_number(card_data[first_digit::])
+        if mask_card_data[0].isalpha():
+            return "Ошибка, проверьте введенные данные"
+        else:
+            mask_card_data = card_data[:first_digit] + mask_card_data
+
+    return mask_card_data
 
 
-def convert_date_format(input_str: str) -> str:
-    """
-    Функция, которая принимает на вход строку вида 2018-07-11T02:26:18.671407
-    и возвращает строку с датой.
-    """
-    input_date = datetime.strptime(input_str, "%Y-%m-%dT%H:%M:%S.%f")
-    return input_date.strftime("%d.%m.%Y")
+def get_date(date: str) -> str:
+    """функция принимает на вход строку с датой в формате
+    2024-03-11T02:26:18.671407  и возвращает строку с датой в формате ДД.ММ.ГГГГ"""
+    try:
+        index = date.index("T")
+        date = date[:index]
+        date_array = date.split("-")
+        date_reforming = ".".join(reversed(date_array))
+    except:
+        return "Ошибка даты"
+    else:
+        return date_reforming
