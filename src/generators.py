@@ -4,7 +4,8 @@ def filter_by_currency(transaction, currency, start=0):
     if currency not in example:
         while True:
             yield "Данной валюты нет в списке транзакций"
-    list_of_currency = list(filter(lambda x: x.get("operationAmount").get("currency").get("code") == currency, transaction))
+    list_of_currency = list(filter(lambda x: x.get("operationAmount").
+                                   get("currency").get("code") == currency, transaction))
     while True:
         yield list_of_currency[start]
         start += 1
@@ -110,4 +111,5 @@ transactions = (
             "to": "Счет 14211924144426031657"
         }
     ]
+
 )

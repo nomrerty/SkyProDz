@@ -7,6 +7,7 @@ def test_get_mask_card_number(masks_card_1, masks_card_2):
     assert get_mask_card_number(7000792289606361) == masks_card_1
     assert get_mask_card_number("7000792289606361") == masks_card_1
 
+
 @pytest.mark.parametrize(
     "num,expected",
     [
