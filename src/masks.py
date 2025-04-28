@@ -1,18 +1,42 @@
-def mask_card(card_number: str) -> str:
-    """
-    Функция принимает на от вас номер карты и возвращает ее маску.
-    """
-    if len(card_number) == 16:  # Проверяем длину номера карты
-        masked_card = card_number[:4] + " " + card_number[4:6] + "** **** " + card_number[-4:]
-        return masked_card
-    return "Некорректный номер карты"
+from typing import Union
 
 
-def mask_account(account_number: str) -> str:
-    """
-    Функция принимает на вход номер счета и возвращает его маску.
-    """
-    if len(account_number) > 4:  # Проверяем, что номер счета хотя бы 4 символа
-        masked_account = "**" + account_number[-4:]
-        return masked_account
-    return "Некорректный номер счета"
+def get_mask_card_number(card_number: Union[int, str]) -> str:
+    """ " Эта функция скрывает номер карты"""
+    card_number = str(card_number)
+    card_number = card_number.replace(" ", "")
+
+    if len(card_number) != 16:
+        return "Некорректный номер карты, пожалуйста введите верный номер карты"
+
+    for i in card_number:
+        if i.isdigit():
+            pass
+        else:
+            return "Некорректный номер карты, пожалуйста введите верный номер карты"
+
+    part_1 = card_number[0:4]
+    part_2 = card_number[4:6]
+    part_3 = card_number[-4::]
+    mask_card_number = f"{part_1} {part_2}** **** {part_3}"
+
+    return mask_card_number
+
+
+def get_mask_account(card_accaunt: Union[int, str]) -> str:
+    """Маскирует номер счета"""
+    card_accaunt = str(card_accaunt)
+    card_accaunt = card_accaunt.strip()
+
+    if len(card_accaunt) < 20:
+        return "Некорректный номер счета"
+
+    for i in card_accaunt:
+        if i.isdigit():
+            pass
+        else:
+            return "Некорректный номер счета"
+
+    mask_card_accaunt = "**" + card_accaunt[-4::]
+
+    return mask_card_accaunt
