@@ -2,15 +2,18 @@ import pandas as pd
 from typing import List, Dict
 import os
 
+
 def get_csv_path() -> str:
     """Возвращает абсолютный путь к CSV-файлу."""
     base_dir = os.path.dirname(os.path.dirname(__file__))  # Папка проекта
     return os.path.join(base_dir, "test_data", "test_transactions.csv")
 
+
 def get_excel_path() -> str:
     """Возвращает абсолютный путь к Excel-файлу."""
     base_dir = os.path.dirname(os.path.dirname(__file__))  # Папка проекта
     return os.path.join(base_dir, "test_data", "test_transactions.xlsx")
+
 
 def load_transactions_from_csv(file_path: str = None) -> List[Dict]:
     """Загружает транзакции из CSV."""
@@ -21,6 +24,7 @@ def load_transactions_from_csv(file_path: str = None) -> List[Dict]:
     except Exception as e:
         print(f"Ошибка при чтении CSV: {e}")
         return []
+
 
 def load_transactions_from_excel(file_path: str = None) -> List[Dict]:
     """Загружает транзакции из Excel."""
