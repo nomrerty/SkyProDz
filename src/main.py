@@ -1,7 +1,7 @@
 import json 
 import csv
 import pandas as pd
-import os
+import os 
 from typing import List, Dict, Any
 from src.transaction_processor import search_transactions_by_description
 
@@ -31,8 +31,6 @@ def format_transaction(transaction: Dict[str, Any]) -> str:
 
 
 def normalize_transaction(transaction: Dict[str, Any]) -> Dict[str, Any]:
-    """Приводит транзакцию к единому формату независимо от источника данных."""
-    # Преобразуем числовые значения в строки
     for key, value in transaction.items():
         if isinstance(value, (int, float)):
             transaction[key] = str(value)
@@ -46,6 +44,11 @@ def normalize_transaction(transaction: Dict[str, Any]) -> Dict[str, Any]:
             }
         }
     return transaction
+
+
+def get_project_root() -> str:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.dirname(current_dir)
 
 
 def load_transactions(file_path: str, file_type: str) -> List[Dict[str, Any]]:
@@ -70,6 +73,7 @@ def load_transactions(file_path: str, file_type: str) -> List[Dict[str, Any]]:
 
 def main():
     print("Привет! Добро пожаловать в программу работы с банковскими транзакциями.")
+    project_root = get_project_root()
     
     while True:
         print("\nВыберите необходимый пункт меню:")
@@ -89,11 +93,11 @@ def main():
         }[choice]
         
         print(f"Для обработки выбран {file_type.upper()}-файл.")
-        
+
         file_paths = {
-            'json': 'data/operations.json',
-            'csv': 'data/transactions.csv',
-            'xlsx': 'data/transactions_excel.xlsx'
+            'json': os.path.join(project_root, 'data', 'operations.json'),
+            'csv': os.path.join(project_root, 'data', 'transactions.csv'),
+            'xlsx': os.path.join(project_root, 'data', 'transactions_excel.xlsx')
         }
         
         transactions = load_transactions(file_paths[file_type], file_type)

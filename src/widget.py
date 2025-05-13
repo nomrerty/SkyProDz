@@ -3,9 +3,6 @@ from src.masks import get_mask_account, get_mask_card_number
 
 
 def mask_account_card(card_data: Union[str]) -> str:
-    """Обрабатывает информацию как о картах, так и о счетах.
-    Возвращает строку с замаскированным номером.
-    """
     card_data = card_data.strip()
 
     if len(card_data) < 16:
@@ -39,9 +36,6 @@ def mask_account_card(card_data: Union[str]) -> str:
 
 
 def get_date(date: str) -> str:
-    """Функция принимает на вход строку с датой в формате
-    2024-03-11T02:26:18.671407 и возвращает строку с датой в формате ДД.ММ.ГГГГ.
-    """
     try:
         index = date.index("T")
         date = date[:index]

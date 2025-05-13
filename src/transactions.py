@@ -4,20 +4,17 @@ import os
 
 
 def get_csv_path() -> str:
-    """Возвращает абсолютный путь к CSV-файлу."""
-    base_dir = os.path.dirname(os.path.dirname(__file__))  # Папка проекта
+    base_dir = os.path.dirname(os.path.dirname(__file__))
     return os.path.join(base_dir, "test_data", "test_transactions.csv")
 
 
 def get_excel_path() -> str:
-    """Возвращает абсолютный путь к Excel-файлу."""
-    base_dir = os.path.dirname(os.path.dirname(__file__))  # Папка проекта
+    base_dir = os.path.dirname(os.path.dirname(__file__))
     return os.path.join(base_dir, "test_data", "test_transactions.xlsx")
 
 
 def load_transactions_from_csv(file_path: str = None) -> List[Dict]:
-    """Загружает транзакции из CSV."""
-    path = file_path or get_csv_path()  # Использует переданный путь или путь по умолчанию
+    path = file_path or get_csv_path()
     try:
         df = pd.read_csv(path, sep=';')
         return df.to_dict('records')
@@ -27,8 +24,7 @@ def load_transactions_from_csv(file_path: str = None) -> List[Dict]:
 
 
 def load_transactions_from_excel(file_path: str = None) -> List[Dict]:
-    """Загружает транзакции из Excel."""
-    path = file_path or get_excel_path()  # Использует переданный путь или путь по умолчанию
+    path = file_path or get_excel_path()
     try:
         df = pd.read_excel(path, engine='openpyxl')
         return df.to_dict('records')

@@ -24,20 +24,16 @@ def get_mask_card_number(card_number: Union[int, str, float]) -> str:
     """Маскирует номер карты с обработкой всех случаев из тестов"""
     logger.debug(f"Начало обработки: {card_number}")
     try:
-        # Преобразуем в строку и удаляем все пробелы
         card_str = str(card_number).strip().replace(" ", "")
 
-        # Проверка на пустую строку или некорректные типы
         if not card_str or not card_str.isdigit():
             logger.error(f"Некорректный ввод: {card_number}")
             return "Некорректный номер карты, пожалуйста введите верный номер карты"
 
-        # Проверка длины номера карты
         if len(card_str) != 16:
             logger.error(f"Неверная длина: {len(card_str)}")
             return "Некорректный номер карты, пожалуйста введите верный номер карты"
 
-        # Форматирование номера карты
         masked = f"{card_str[:4]} {card_str[4:6]}** **** {card_str[-4:]}"
         logger.info(f"Успешно: {masked}")
         return masked
