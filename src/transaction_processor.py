@@ -15,19 +15,17 @@ def search_transactions_by_description(transactions: List[Dict[str, Any]], searc
         return []
 
 
-def count_transactions_by_category(transactions: List[Dict[str, Any]], categories: Dict[str, List[str]]) -> Dict[str, int]:
+def count_transactions_by_category(transactions: List[Dict[str, Any]], categories: Dict[str, List[str]])\
+        -> Dict[str, int]:
     transaction_categories = []
-    
     for transaction in transactions:
         description = str(transaction.get('description', '')).upper()
-        
         # Определение категории транзакции
         found_category = None
         for category, keywords in categories.items():
             if any(keyword.upper() in description for keyword in keywords):
                 found_category = category
                 break
-        
         if found_category:
             transaction_categories.append(found_category)
         else:
@@ -40,5 +38,4 @@ def count_transactions_by_category(transactions: List[Dict[str, Any]], categorie
     for category in categories.keys():
         if category not in category_counts:
             category_counts[category] = 0
-            
-    return dict(category_counts) 
+    return dict(category_counts)

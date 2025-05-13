@@ -1,7 +1,7 @@
-import json 
+import json
 import csv
 import pandas as pd
-import os 
+import os
 from typing import List, Dict, Any
 from transaction_processor import search_transactions_by_description, count_transactions_by_category
 
@@ -32,33 +32,28 @@ def format_transaction(transaction: Dict[str, Any]) -> str:
     """Форматирует транзакцию для вывода."""
     date = transaction.get('date', '')
     description = transaction.get('description', '')
-    
     if 'operationAmount' in transaction:
         amount = transaction['operationAmount'].get('amount', '')
         currency = transaction['operationAmount'].get('currency', {}).get('name', '')
     else:
         amount = transaction.get('amount', '')
         currency = transaction.get('currency_name', '')
-    
-    from_account = transaction.get('from', '')
+        from_account = transaction.get('from', '')
     to_account = transaction.get('to', '')
-    
-    if from_account and to_account:
-        account_info = f"{from_account} -> {to_account}"
+    if from_account and to_account: account_info = f"{from_account} -> {to_account}"
     elif to_account:
         account_info = to_account
     else:
         account_info = ''
-        
     return f"{date} {description}\n{account_info}\nСумма: {amount} {currency}\n"
 
 
 def normalize_transaction(transaction: Dict[str, Any]) -> Dict[str, Any]:
+
     """Приводит транзакцию к единому формату независимо от источника данных."""
     for key, value in transaction.items():
         if isinstance(value, (int, float)):
             transaction[key] = str(value)
-            
     if 'operationAmount' not in transaction and 'amount' in transaction:
         transaction['operationAmount'] = {
             'amount': transaction['amount'],
@@ -100,22 +95,18 @@ def load_transactions(file_path: str, file_type: str) -> List[Dict[str, Any]]:
 def process_transactions(transactions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Обработка транзакций с применением фильтров."""
     valid_statuses = ['EXECUTED', 'CANCELED', 'PENDING']
-    
     while True:
         print("\nВведите статус, по которому необходимо выполнить фильтрацию.")
         print("Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING")
         status = input().strip().upper()
-        
         if status not in valid_statuses:
             print(f'Статус операции "{status}" недоступен.')
             continue
         break
-    
     filtered_transactions = [
         t for t in transactions
         if t.get('state', '').upper() == status
     ]
-    
     print(f'Операции отфильтрованы по статусу "{status}"')
     return filtered_transactions
 
@@ -124,90 +115,73 @@ def main():
     """Менюшка"""
     print("Привет! Добро пожаловать в программу работы с банковскими транзакциями.")
     project_root = get_project_root()
-    
     while True:
         print("\nВыберите необходимый пункт меню:")
         print("1. Получить информацию о транзакциях из JSON-файла")
         print("2. Получить информацию о транзакциях из CSV-файла")
         print("3. Получить информацию о транзакциях из XLSX-файла")
         print("4. Выход")
-        
         choice = input().strip()
         if choice == '4':
             break
-            
         if choice not in ['1', '2', '3']:
             print("Неверный выбор. Пожалуйста, выберите 1, 2, 3 или 4.")
             continue
-            
+
         file_type = {
             '1': 'json',
             '2': 'csv',
             '3': 'xlsx'
         }[choice]
-        
         print(f"\nДля обработки выбран {file_type.upper()}-файл.")
-        
         file_paths = {
             'json': os.path.join(project_root, 'data', 'operations.json'),
             'csv': os.path.join(project_root, 'data', 'transactions.csv'),
             'xlsx': os.path.join(project_root, 'data', 'transactions_excel.xlsx')
         }
-        
         transactions = load_transactions(file_paths[file_type], file_type)
         if not transactions:
             print("Не удалось загрузить файл с транзакциями")
             continue
-        
         while True:
             print("\nВыберите операцию:")
             print("1. Фильтрация и поиск транзакций")
             print("2. Подсчет количества транзакций по категориям")
             print("3. Вернуться в главное меню")
-            
             operation = input().strip()
-            
             if operation == '1':
                 filtered_transactions = process_transactions(transactions)
-                
                 if get_yes_no_answer("\nОтсортировать операции по дате? Да/Нет: "):
                     sort_order = input("Отсортировать по возрастанию или по убыванию? ").strip().lower()
                     reverse = sort_order == 'по убыванию'
                     filtered_transactions.sort(key=lambda x: x.get('date', ''), reverse=reverse)
-                
                 if get_yes_no_answer("\nВыводить только рублевые транзакции? Да/Нет: "):
                     filtered_transactions = [
                         t for t in filtered_transactions
                         if (t.get('operationAmount', {}).get('currency', {}).get('name') == 'руб.' or
                             t.get('currency_name') == 'руб.')
                     ]
-                
                 if get_yes_no_answer("\nОтфильтровать список транзакций по определенному слову в описании? Да/Нет: "):
                     search_term = input("Введите слово для поиска: ").strip()
                     filtered_transactions = search_transactions_by_description(filtered_transactions, search_term)
-                
                 print("\nРаспечатываю итоговый список транзакций...")
                 print(f"\nВсего банковских операций в выборке: {len(filtered_transactions)}\n")
-                
                 if not filtered_transactions:
                     print("Не найдено ни одной транзакции, подходящей под ваши условия фильтрации")
                 else:
                     for transaction in filtered_transactions:
                         print(format_transaction(transaction))
-                        
             elif operation == '2':
                 category_counts = count_transactions_by_category(transactions, TRANSACTION_CATEGORIES)
                 print("\nКоличество транзакций по категориям:")
                 for category, count in category_counts.items():
                     print(f"{category}: {count}")
-                    
             elif operation == '3':
                 break
             else:
                 print("Неверный выбор. Пожалуйста, выберите 1, 2 или 3.")
-    
     print("\nСпасибо за использование программы!")
 
 
 if __name__ == "__main__":
-    main() 
+    main()
